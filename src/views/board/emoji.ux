@@ -1,0 +1,228 @@
+<template>
+  <div class="container">
+    <scroll>
+      <div for="group in emojiList" class="emoji-group">
+        <div for="item in group" class="emoji-item">
+          <image :src="item.img" @click="selectEmoji(item.value)"></image>
+        </div>
+      </div>
+    </scroll>
+  </div>
+</template>
+
+<script lang="ts">
+import { eventEmitter, InsertImeText } from '/utils/event';
+export default {
+  emojiList: [
+    [
+      { img: '/assets/imgs/emotcions/P01.png', value: '😀' },
+      { img: '/assets/imgs/emotcions/P02.png', value: '😀' },
+      { img: '/assets/imgs/emotcions/P03.png', value: '😄' },
+    ],
+    [
+      { img: '/assets/imgs/emotcions/P11.png', value: '😁' },
+      { img: '/assets/imgs/emotcions/P12.png', value: '😆' },
+      { img: '/assets/imgs/emotcions/P13.png', value: '😅' },
+    ],
+    [
+      { img: '/assets/imgs/emotcions/P21.png', value: '🤣' },
+      { img: '/assets/imgs/emotcions/P22.png', value: '😂' },
+      { img: '/assets/imgs/emotcions/P23.png', value: '🙂' },
+    ],
+    [
+      { img: '/assets/imgs/emotcions/P31.png', value: '🙃' },
+      { img: '/assets/imgs/emotcions/P32.png', value: '🫠' },
+      { img: '/assets/imgs/emotcions/P33.png', value: '😏' },
+    ],
+    [
+      { img: '/assets/imgs/emotcions/P41.png', value: '😇' },
+      { img: '/assets/imgs/emotcions/P42.png', value: '🥰' },
+      { img: '/assets/imgs/emotcions/P43.png', value: '😍' },
+    ],
+    [
+      { img: '/assets/imgs/emotcions/P51.png', value: '🤩' },
+      { img: '/assets/imgs/emotcions/P52.png', value: '😘' },
+      { img: '/assets/imgs/emotcions/P53.png', value: '😗' },
+    ],
+    [
+      { img: '/assets/imgs/emotcions/P61.png', value: '☺️' },
+      { img: '/assets/imgs/emotcions/P62.png', value: '😚' },
+      { img: '/assets/imgs/emotcions/P63.png', value: '🥲' },
+    ],
+    [
+      { img: '/assets/imgs/emotcions/P71.png', value: '😋' },
+      { img: '/assets/imgs/emotcions/P72.png', value: '😛' },
+      { img: '/assets/imgs/emotcions/P73.png', value: '😜' },
+    ],
+    [
+      { img: '/assets/imgs/emotcions/P81.png', value: '🤪' },
+      { img: '/assets/imgs/emotcions/P82.png', value: '😝' },
+      { img: '/assets/imgs/emotcions/P83.png', value: '🤑' },
+    ],
+    [
+      { img: '/assets/imgs/emotcions/P91.png', value: '🤗' },
+      { img: '/assets/imgs/emotcions/P92.png', value: '🤭' },
+      { img: '/assets/imgs/emotcions/P93.png', value: '🫢' },
+    ],
+    [
+      { img: '/assets/imgs/emotcions/P101.png', value: '🫣' },
+      { img: '/assets/imgs/emotcions/P102.png', value: '🤫' },
+      { img: '/assets/imgs/emotcions/P103.png', value: '🤔' },
+    ],
+    [
+      { img: '/assets/imgs/emotcions/P111.png', value: '🫡' },
+      { img: '/assets/imgs/emotcions/P112.png', value: '🤐' },
+      { img: '/assets/imgs/emotcions/P113.png', value: '🤨' },
+    ],
+    [
+      { img: '/assets/imgs/emotcions/P121.png', value: '😐' },
+      { img: '/assets/imgs/emotcions/P122.png', value: '😑' },
+      { img: '/assets/imgs/emotcions/P123.png', value: '🫥' },
+    ],
+    [
+      { img: '/assets/imgs/emotcions/P131.png', value: '😶‍🌫️' },
+      { img: '/assets/imgs/emotcions/P132.png', value: '😏' },
+      { img: '/assets/imgs/emotcions/P133.png', value: '😒' },
+    ],
+    [
+      { img: '/assets/imgs/emotcions/P141.png', value: '🙄' },
+      { img: '/assets/imgs/emotcions/P142.png', value: '😬' },
+      { img: '/assets/imgs/emotcions/P143.png', value: '😮‍💨' },
+    ],
+    [
+      { img: '/assets/imgs/emotcions/P151.png', value: '🤥' },
+      { img: '/assets/imgs/emotcions/P152.png', value: '🫨' },
+      { img: '/assets/imgs/emotcions/P153.png', value: '🙂‍↔️' },
+    ],
+    [
+      { img: '/assets/imgs/emotcions/P161.png', value: '🙂‍↕️' },
+      { img: '/assets/imgs/emotcions/P162.png', value: '😌' },
+      { img: '/assets/imgs/emotcions/P163.png', value: '😔' },
+    ],
+    [
+      { img: '/assets/imgs/emotcions/P171.png', value: '😪' },
+      { img: '/assets/imgs/emotcions/P172.png', value: '🤤' },
+      { img: '/assets/imgs/emotcions/P173.png', value: '😴' },
+    ],
+    [
+      { img: '/assets/imgs/emotcions/P181.png', value: '🤬' },
+      { img: '/assets/imgs/emotcions/P182.png', value: '😷' },
+      { img: '/assets/imgs/emotcions/P183.png', value: '🤒' },
+    ],
+    [
+      { img: '/assets/imgs/emotcions/P191.png', value: '🤕' },
+      { img: '/assets/imgs/emotcions/P192.png', value: '🤢' },
+      { img: '/assets/imgs/emotcions/P193.png', value: '🤮' },
+    ],
+    [
+      { img: '/assets/imgs/emotcions/P201.png', value: '🤧' },
+      { img: '/assets/imgs/emotcions/P202.png', value: '🥵' },
+      { img: '/assets/imgs/emotcions/P203.png', value: '🥶' },
+    ],
+    [
+      { img: '/assets/imgs/emotcions/P211.png', value: '🥴' },
+      { img: '/assets/imgs/emotcions/P212.png', value: '😵' },
+      { img: '/assets/imgs/emotcions/P213.png', value: '😵‍💫' },
+    ],
+    [
+      { img: '/assets/imgs/emotcions/P221.png', value: '🤯' },
+      { img: '/assets/imgs/emotcions/P222.png', value: '🤠' },
+      { img: '/assets/imgs/emotcions/P223.png', value: '🥳' },
+    ],
+    [
+      { img: '/assets/imgs/emotcions/P231.png', value: '🥸' },
+      { img: '/assets/imgs/emotcions/P232.png', value: '😎' },
+      { img: '/assets/imgs/emotcions/P233.png', value: '🤓' },
+    ],
+    [
+      { img: '/assets/imgs/emotcions/P241.png', value: '🧐' },
+      { img: '/assets/imgs/emotcions/P242.png', value: '😕' },
+      { img: '/assets/imgs/emotcions/P243.png', value: '🫤' },
+    ],
+    [
+      { img: '/assets/imgs/emotcions/P251.png', value: '😟' },
+      { img: '/assets/imgs/emotcions/P252.png', value: '😮' },
+      { img: '/assets/imgs/emotcions/P253.png', value: '😮' },
+    ],
+    [
+      { img: '/assets/imgs/emotcions/P261.png', value: '😯' },
+      { img: '/assets/imgs/emotcions/P262.png', value: '😳' },
+      { img: '/assets/imgs/emotcions/P263.png', value: '🥺' },
+    ],
+    [
+      { img: '/assets/imgs/emotcions/P271.png', value: '😦' },
+      { img: '/assets/imgs/emotcions/P272.png', value: '😧' },
+      { img: '/assets/imgs/emotcions/P273.png', value: '😨' },
+    ],
+    [
+      { img: '/assets/imgs/emotcions/P281.png', value: '😰' },
+      { img: '/assets/imgs/emotcions/P282.png', value: '😥' },
+      { img: '/assets/imgs/emotcions/P283.png', value: '😠' },
+    ],
+    [
+      { img: '/assets/imgs/emotcions/P291.png', value: '😭' },
+      { img: '/assets/imgs/emotcions/P292.png', value: '😱' },
+      { img: '/assets/imgs/emotcions/P293.png', value: '😖' },
+    ],
+    [
+      { img: '/assets/imgs/emotcions/P301.png', value: '😣' },
+      { img: '/assets/imgs/emotcions/P302.png', value: '😞' },
+      { img: '/assets/imgs/emotcions/P303.png', value: '😓' },
+    ],
+    [
+      { img: '/assets/imgs/emotcions/P311.png', value: '😩' },
+      { img: '/assets/imgs/emotcions/P312.png', value: '😫' },
+      { img: '/assets/imgs/emotcions/P313.png', value: '🥱' },
+    ],
+    [
+      { img: '/assets/imgs/emotcions/P321.png', value: '😤' },
+      { img: '/assets/imgs/emotcions/P322.png', value: '😡' },
+      { img: '/assets/imgs/emotcions/P323.png', value: '😈' },
+    ],
+    [
+      { img: '/assets/imgs/emotcions/P331.png', value: '👿' },
+      { img: '/assets/imgs/emotcions/P332.png', value: '👹' },
+    ],
+  ],
+  selectEmoji(emoji: string) {
+    console.debug('select emoji', emoji);
+    eventEmitter.emit(InsertImeText, {
+      input: '',
+      select: emoji,
+    });
+  },
+};
+</script>
+
+
+<style lang="css">.container {
+  display: flex;
+  flex-grow: 1;
+}
+
+scroll {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  flex-direction: column;
+}
+
+scroll .emoji-group {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+scroll .emoji-item {
+  width: 33.33%;
+  display: flex;
+  justify-content: center;
+}
+
+@media (shape: circle) {
+  scroll {
+    padding: 0 15%;
+  }
+}
+</style>
+

@@ -1,0 +1,267 @@
+<import src="./key.ux" name="BoardKey"></import>
+<import src="/views/setting/index.ux" name="Setting" />
+
+<template>
+  <div class="container">
+    <!-- TODO 需要禁用 swiper ，但是目前会将 disabled 传递到所有子组件，导致无法响应 click，暂时在子组件的 touchmove 中使用 strongResponse 来阻止事件响应-->
+    <swiper id="boardSwiper" snapshot vertical bounces="end">
+      <div class="board-container" quiescent @touchmove="stopSwiperMove">
+        <div class="top-gap gap"></div>
+        <div class="board-form">
+          <text-field
+            id="textFiled"
+            :password="showPassword"
+            ::value="showImeText"
+          ></text-field>
+          <image
+            class="eye-icon"
+            :if="showPasswordEye"
+            async
+            :src="getPwdIcon"
+            @click="togglePwdMode"
+          ></image>
+          <image
+            async
+            src="/assets/imgs/board/confirm.png"
+            @click="confirmInput"
+          ></image>
+        </div>
+        <div class="board-key">
+          <board-key @backspace="backspace"></board-key>
+          <image
+            async
+            src="/assets/imgs/board/moreUp.png"
+            :show="!disableSwiper"
+          ></image>
+          <div class="bottom-gap gap"></div>
+        </div>
+      </div>
+      <setting :if="showSettingPage" @backSwiper="backSwiper"></setting>
+    </swiper>
+  </div>
+</template>
+
+<script lang="ts">
+import {  eventEmitter, InsertImeText } from '/utils/event';
+import SysApp from '@system.app';
+import SysLaunch from '@system.launch';
+import SysPrompt from '@system.prompt';
+import { container } from '/utils/container';
+import { Store } from '/store';
+import SysFile from '@system.file'
+import SysRoute from '@system.router'
+
+type PromptLike = {
+  showToast(options: { message: string; duration?: number }): void;
+  showPopup(options: { uri: string; params?: { [k: string]: unknown } }): void;
+};
+
+const prompt = SysPrompt as PromptLike;
+
+interface Data {
+  imeResult: string; // 选定的字词
+  inputText: string; // 输入的字符
+  candidateList: Array<{
+    surface: string;
+    reading: string;
+  }>;
+  disableSwiper: boolean;
+  showKeyBoard: Boolean;
+  showPassword: boolean;
+  showPasswordEye: boolean;
+  showSettingPage: boolean
+}
+
+export default {
+  data: {
+    imeResult: '',
+    candidateList: [],
+    showAllCandidate: false,
+    inputText: '',
+    disableSwiper: false,
+    showKeyBoard: false,
+    showPassword: false,
+    showPasswordEye: false,
+    showSettingPage: false
+  } as Data,
+  imeTextEventId: null,
+
+  onInit() {
+    console.debug('initParams', this.$app.initParams);
+    if (this.$app.initParams?.value) {
+      this.showImeText = this.$app.initParams.value;
+    } else {
+      setTimeout(() => {
+        this.showImeText = ' ';
+        this.showImeText = '';
+      }, 200);
+    }
+    SysFile.access({
+      uri: 'internal://files/license',
+    }).then(exist=>{
+      if(!exist){
+        SysRoute.replace({
+          uri: 'launch'
+        })
+      }
+    })
+    this.showPassword =
+      this.$app.initParams.inputType === 'password';
+    this.showPasswordEye =
+      this.$app.initParams.inputType === 'password';
+
+    this.imeTextEventId = eventEmitter.on(InsertImeText, (params) => {
+      if (container.get<Store>('store').isMorThanMaxLen(this.$app.initParams)) {
+        prompt.showToast({
+          message: $t('imeStatusBufferTooSmall') as string,
+          duration: 1000,
+        });
+        return;
+      }
+      console.debug(
+        'insert candidate---',
+        this.inputText,
+        this.imeResult,
+        params,
+      );
+      for (let i = 0; i < this.inputText.length; i++) {
+        this.$element('textFiled')?.backspace();
+      }
+      this.$element('textFiled')?.insert(params.input);
+
+      this.$element('textFiled')?.insert(params.select);
+      this.inputText = params.input;
+    }) as any;
+
+  },
+
+  computed: {
+    showImeText: {
+      get() {
+        container.get<Store>('store').curInputLen =
+          this.imeResult.length - this.inputText.length;
+        return this.imeResult;
+      },
+      set(text: string) {
+        console.debug('set ime result', text);
+        this.imeResult = text;
+      },
+    },
+
+    getPwdIcon() {
+      return this.showPassword
+        ? '/assets/imgs/board/hide_pwd.png'
+        : '/assets/imgs/board/show_pwd.png';
+    },
+  },
+  onShow() {
+    this.showKeyBoard = true;
+    setTimeout(() => {
+      this.showSettingPage = true
+    }, 100);
+  },
+  togglePwdMode() {
+    this.showPassword = !this.showPassword;
+  },
+  backspace() {
+    console.debug('back======');
+    this.imeResult = this.imeResult.slice(0, this.imeResult.length - 1);
+    this.$element('textFiled')?.backspace();
+  },
+  backSwiper() {
+    this.$element('boardSwiper')?.setIndex({
+      index: 0,
+      behavior: 'smooth',
+    });
+  },
+  onDestroy() {
+    eventEmitter.off(InsertImeText, this.imeTextEventId as any);
+  },
+  stopSwiperMove(event: any) {
+    event.strongResponse(this.disableSwiper);
+    if (this.disableSwiper) event.stopPropagation();
+  },
+  confirmInput() {
+    SysApp.sendBroadcast({
+      text: this.imeResult,
+    });
+    if (process.env.GLYPHIX_EMU_LAUNCHER === 'true') {
+      SysRoute.replace({
+        uri: 'main',
+      });
+    } else {
+      SysLaunch.exit();
+    }
+  },
+};
+</script>
+
+ <style lang="css">.container {
+  display: flex;
+  flex-direction: column;
+  font-family: sans-serif, thai;
+}
+
+.gap {
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+.gap.top-gap {
+  height: 10%;
+}
+
+.gap.bottom-gap {
+  height: 2%;
+  min-width: 0;
+  margin: 0 2px;
+  border-radius: 16px;
+}
+
+.board-form {
+  padding: 0 20%;
+  display: flex;
+  flex-direction: row;
+  flex-shrink: 0;
+  flex-grow: 0;
+  justify-content: space-between;
+}
+
+.board-form text-field {
+  flex-grow: 1;
+  border-bottom: 1px solid #858282;
+  line-height: 40px;
+}
+
+.board-form image {
+  flex-shrink: 0;
+}
+
+.board-form .eye-icon {
+  margin-right: 20px;
+}
+
+swiper {
+  flex: 1;
+}
+
+.board-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.board-container .board-key {
+  flex: 1;
+  flex-direction: column;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+}
+
+@media screen and (shape: rect) {
+  .board-form {
+    padding: 0 8%;
+  }
+}
+</style>

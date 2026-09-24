@@ -1,0 +1,50 @@
+{
+  "package": "com.xfaith.openboard",
+  "name": "${appName}",
+  "versionName": "0.3.0",
+  "versionCode": 30,
+  "icon": "",
+  "features": [],
+  "permissions": [
+    {
+      "name": "watch.permission.RECORD"
+    },
+    {
+      "name": "watch.permission.DEVICE_INFO"
+    }
+  ],
+  "router": {
+    "entry": "launch",
+    "pages": {
+      "launch": {
+        "component": "index",
+        "path": "views/launch"
+      },
+      "board": {
+        "component": "index",
+        "path": "views/board"
+      },
+      "setting": {
+        "component": "index",
+        "path": "views/setting"
+      },
+      "settings": {
+        "component": "setting",
+        "path": "views/setting"
+      },
+      "about": {
+        "component": "about",
+        "path": "views/setting"
+      }
+    }
+  },
+  "config": {
+    "designWidth": 410,
+    "assets": [
+      "assets/**"
+    ]
+  },
+  "schemes": [
+    "ime"
+  ]
+}

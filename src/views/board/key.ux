@@ -1,0 +1,399 @@
+<import src="./emoji.ux" name="EmojiBoard" />
+<import src="./numberSymbol.ux" name="NumberSymbolBoard" />
+<import src="/components/layout/en-US.ux" name="en-us" />
+<import src="/components/layout/zh-CN_26.ux" name="zh-cn-26" />
+<import src="/components/layout/zh-CN_9.ux" name="zh-cn-9" />
+<import src="/components/layout/zh-HK_26.ux" name="zh-hk-26" />
+<import src="/components/layout/zh-HK_9.ux" name="zh-hk-9" />
+<import src="/components/layout/zh-TW_26.ux" name="zh-tw-26" />
+<import src="/components/layout/zh-TW_9.ux" name="zh-tw-9" />
+
+
+<template>
+  <div class="key-board">
+    <div class="top-candidate" :if="showTopCandidate">
+      <scroll id="topCandidate">
+        <p for="item in candidateList" @click="onTapCandidate(item)">
+          {{ item.surface }}
+        </p>
+      </scroll>
+      <image
+        async
+        src="/assets/imgs/board/more.png"
+        @click="toggleAllCandidate"
+      ></image>
+    </div>
+    <div class="board-section" if="showBoardType === 'normal' && !showCandidateList" >
+      <en-us
+        :showShiftValue="showShiftValue"
+        if="curBoard==='en-US'"
+        @keyTap="onKeyTap"
+      ></en-us>
+      <zh-cn-26
+        :showShiftValue="showShiftValue"
+        if="curBoard==='zh_26'"
+        @keyTap="onKeyTap"
+      ></zh-cn-26>
+      <zh-cn-9
+        :showShiftValue="showShiftValue"
+        if="curBoard==='zh_9'"
+        @keyTap="onKeyTap"
+      ></zh-cn-9>
+      <zh-hk-26
+        :showShiftValue="showShiftValue"
+        if="curBoard==='zh_hk_26'"
+        @keyTap="onKeyTap"
+      ></zh-hk-26>
+      <zh-hk-9
+        :showShiftValue="showShiftValue"
+        if="curBoard==='zh_hk_9'"
+        @keyTap="onKeyTap"
+      ></zh-hk-9>
+      <zh-tw-26
+        :showShiftValue="showShiftValue"
+        if="curBoard==='zh_tw_26'"
+        @keyTap="onKeyTap"
+      ></zh-tw-26>
+      <zh-tw-9
+        :showShiftValue="showShiftValue"
+        if="curBoard==='zh_tw_9'"
+        @keyTap="onKeyTap"
+      ></zh-tw-9>
+    </div>
+    <div
+      class="board-section"
+      :if="!showCandidateList && showBoardType === 'emoji'"
+    >
+      <emoji-board></emoji-board>
+    </div>
+    <div
+      class="board-section"
+      :if="!showCandidateList && showBoardType === 'number'"
+    >
+      <number-symbol-board></number-symbol-board>
+    </div>
+    <scroll class="candaidate-list" :if="showCandidateList">
+      <div class="candidate-row">
+        <p for="item in candidateList" @click="onTapCandidate(item)">
+          {{ item.surface }}
+        </p>
+      </div>
+      <div class="candidate-gap"></div>
+    </scroll>
+    <div class="bottom-fix-option" :if="!isHideBottomFixOperation">
+      <image
+        async
+        src="/assets/imgs/board/back.png"
+        :if="showCandidateList"
+        @click="toggleAllCandidate"
+      ></image>
+      <image
+        async
+        src="/assets/imgs/board/space.png"
+        @click="insertSpace"
+      ></image>
+      <image
+        async
+        src="/assets/imgs/board/backspace.png"
+        @longpress="longPressBackspace"
+        @touchend="backspaceTouchEnd"
+        @touchcancel="backspaceTouchEnd"
+        @click="backspace"
+      ></image>
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+import {
+  ChangeBoardType,
+  ChangeCandidateList,
+  ChangeLang,
+  eventEmitter,
+  InsertImeText,
+} from '/utils/event';
+import { ShowKeyBoardType } from '/utils/type';
+import { container } from '/utils/container';
+import { Store } from '/store';
+import { Candidate } from '/types';
+import { ImeEngine } from '/utils/ime-engine';
+import { prompt } from '/utils/prompt';
+import { QueryResult } from '@system.ime';
+import { NetworkUtils } from '/utils/network';
+import type { createImeManager } from './keyLib';
+
+interface Data {
+  renderRows: Array<{
+    keys: Array<{
+      type: string;
+      label: string;
+      shiftLabel?: string;
+      value: string;
+      shiftValue: string;
+    }>;
+  }>;
+  showShiftValue: boolean;
+  candidateList: Array<Candidate>;
+  showBoardType: ShowKeyBoardType;
+  curLang: string;
+  curBoard: string;
+  isHideBottomFixOperation: boolean;
+  curLangCode: string;
+  showCandidateList: boolean;
+}
+
+export default {
+  data: {
+    renderRows: [],
+    showShiftValue: false,
+    candidateList: [
+      {
+        surface: '',
+      },
+    ],
+    showBoardType: ShowKeyBoardType.NormalBoard,
+    curLang: '',
+    curBoard: 'en-US',
+    isHideBottomFixOperation: false,
+    curLangCode: '',
+    showCandidateList: false,
+    versionTest: process.env.GLYPHIX_TEXT_VERSION,
+  } as Data,
+  defaultCandidate: [],
+  needReplaceCandiateList: false,
+  displayInputText: '',
+  rawInputGroup: [] as Array<string>,
+  _backspaceTimer: null as number | null,
+  _queryImeRunning: false,
+  _queryImePending: false,
+  hasILoadedImdict: false,
+  imeManager: null as ReturnType<typeof createImeManager> | null,
+  lastDictFile: undefined,
+  changeLangEventId: null,
+  changeBoardTypeEventId: null,
+  changeCandidateListEventId: null,
+
+  onInit() {
+    console.debug('initParams=====', this.$app.initParams);
+    const boardType = this.$app.initParams.inputType ?? 'text';
+    switch (boardType) {
+      case 'text':
+        this.showBoardType = ShowKeyBoardType.NormalBoard;
+        break;
+      case 'password':
+      case 'number':
+        this.showBoardType = ShowKeyBoardType.NumberBoard;
+        break;
+      case 'emoji':
+        this.showBoardType = ShowKeyBoardType.EmojiBoard;
+        break;
+      default:
+        this.showBoardType = ShowKeyBoardType.NormalBoard;
+    }
+    this.changeLangEventId = eventEmitter.on(ChangeLang, (isInit: boolean) => {
+      this.showShiftValue = false;
+
+      this.imeManager?.loadLayout();
+      if(!isInit)
+        this.showBoardType = ShowKeyBoardType.NormalBoard;
+      this.curBoard = container.get<Store>('store').activeBoard;
+
+      this.displayInputText = '';
+      this.rawInputGroup = [];
+      eventEmitter.emit(InsertImeText, {
+        input: '',
+        select: '',
+      });
+    }) as any;
+    this.changeBoardTypeEventId = eventEmitter.on(ChangeBoardType, (type: ShowKeyBoardType) => {
+      console.debug('change board type', type, this.showBoardType);
+      this.showBoardType = type;
+      this.displayInputText = '';
+      this.rawInputGroup = [];
+    }) as any;
+    this.changeCandidateListEventId = eventEmitter.on(ChangeCandidateList, (list) => {
+      this.candidateList = [...list];
+    }) as any;
+   
+  },
+  onReady() {
+    setTimeout(() => {
+      import('./keyLib').then((res) => {
+        this.imeManager = res.createImeManager(this as any, container);
+
+        container.singleton('imeEngine', ImeEngine);
+        container.singleton('net', NetworkUtils);
+        container.get<NetworkUtils>('net').initNetStatus();
+        this.imeManager?.loadLayout().finally(() => {
+          this.curBoard = container.get<Store>('store').activeBoard;
+          this.hasILoadedImdict = true;
+        });
+      });
+    }, 50);
+  },
+  onDestroy() {
+    this.imeManager = null;
+    eventEmitter.off(ChangeLang, this.changeLangEventId as any);
+    eventEmitter.off(ChangeBoardType, this.changeBoardTypeEventId as any);
+    eventEmitter.off(ChangeCandidateList, this.changeCandidateListEventId as any);
+  },
+  computed: {
+    showTopCandidate() {
+      return (
+        (this.showBoardType === 'normal') &&
+        !this.showCandidateList
+      );
+    },
+  },
+
+  watch: {
+    candidateList() {
+      console.debug('top candidate scroll back');
+      this.$element('topCandidate')?.scrollTo({
+        left: 0,
+      });
+    },
+    showBoardType() {
+      eventEmitter.emit(ChangeBoardType, this.showBoardType);
+    },
+  },
+
+  toggleAllCandidate() {
+    this.showCandidateList = !this.showCandidateList;
+  },
+
+  onTapCandidate(item: Candidate) {
+    this.imeManager?.onTapCandidate(item);
+  },
+  insertSpace() {
+    if (this.displayInputText.length) {
+      this.displayInputText = '';
+
+      eventEmitter.emit(InsertImeText, {
+        input: this.displayInputText,
+        select: this.candidateList[0].surface + ' ',
+      });
+      this.rawInputGroup = [];
+      this.candidateList = this.defaultCandidate;
+    } else {
+      eventEmitter.emit(InsertImeText, {
+        input: '',
+        select: ' ',
+      });
+    }
+  },
+
+  onKeyTap(key: { type: string; value: string; shiftValue?: string }) {
+    this.imeManager?.onKeyTap(key);
+  },
+
+  appendCandidate(result: QueryResult) {
+    this.imeManager?.appendCandidate(result);
+  },
+  longPressBackspace() {
+    this.imeManager?.longPressBackspace();
+  },
+  backspace() {
+    this.imeManager?.backspace();
+  },
+  backspaceTouchEnd(){
+    this.imeManager?.stopLongPressBackspace();
+  }
+};
+</script>
+
+<style lang="css">.key-board {
+  display: flex;
+  flex: 1;
+  width: 100%;
+  flex-direction: column;
+  font-family: sans-serif, thai;
+}
+
+.key-board .bottom-fix-option {
+  display: flex;
+  flex-grow: 0;
+  flex-shrink: 0;
+  justify-content: space-around;
+}
+
+.key-board .bottom-fix-option image {
+  width: 33%;
+}
+
+.key-board .board-container {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.key-board .board-section {
+  width: 100%;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.top-candidate {
+  padding: 0 10%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.top-candidate image {
+  flex-shrink: 0;
+  padding: 0 10px 0 10px;
+}
+
+.top-candidate scroll {
+  display: flex;
+  flex-grow: 1;
+  padding-right: 5%;
+  flex-direction: row;
+}
+
+.top-candidate scroll p {
+  padding: 0 0.5rem;
+  text-align: center;
+  overflow: visible;
+  height: 50px;
+  font-size: 0.9rem;
+}
+
+.candaidate-list {
+  display: flex;
+  flex-grow: 1;
+  padding-top: 25px;
+  flex-direction: column;
+}
+
+.candaidate-list .candidate-row {
+  display: flex;
+  flex-grow: 1;
+  padding-top: 25px;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.candaidate-list .candidate-row p {
+  flex-shrink: 0;
+  flex-grow: 1;
+  min-width: 25%;
+  padding: 0 16px;
+  text-align: center;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.candaidate-list .candidate-gap {
+  height: 15%;
+}
+
+@media (shape: circle) {
+  .bottom-fix-option {
+    padding: 5px 20%;
+  }
+}
+</style>

@@ -1,0 +1,32 @@
+<template>
+      <div class="key-row">
+            <p class="key-item number-key" @click="onTapKey('number', '', '')">12</p>
+            <p class="key-item" @click="onTapKey('input', '2', '2')">{{ 'ABC' }}</p>
+            <p class="key-item" @click="onTapKey('input', '3', '3')">{{ 'DEF' }}</p>
+      </div>
+      <div class="key-row">
+            <p class="key-item" @click="onTapKey('input', '4', '4')">{{ 'GHI' }}</p>
+            <p class="key-item" @click="onTapKey('input', '5', '5')">{{ 'JKL' }}</p>
+            <p class="key-item" @click="onTapKey('input', '6', '6')">{{ 'MNO' }}</p>
+      </div>
+      <div class="key-row">
+            <p class="key-item" @click="onTapKey('func', '7', '7')">{{ 'PQRS' }}</p>
+            <p class="key-item" @click="onTapKey('input', '8', '8')">{{ 'TUV' }}</p>
+            <p class="key-item" @click="onTapKey('input', '9', '9')">{{ 'WXYZ' }}</p>
+      </div>
+</template>
+
+<script lang="ts">
+export default {
+  data:{
+    showShiftValue: false
+  },
+  onTapKey(type: string, value: string, shiftValue: string){
+    this.$emit('keyTap', {type, value, shiftValue})
+  }
+};
+</script>
+
+<style lang="css">@import '/components/layout/common.css';
+
+</style>

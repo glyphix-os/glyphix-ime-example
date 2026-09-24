@@ -1,0 +1,116 @@
+// server/layout/zh-CN/zh_9.json
+var zh_9_default = {
+  id: "zh",
+  name: "Zh_26",
+  boardMask: 2,
+  library: "zh",
+  version: 1,
+  defaultCandidate: [
+    {
+      surface: "\u55EF",
+      reading: "en"
+    },
+    {
+      surface: "\u597D",
+      reading: "hao"
+    },
+    {
+      surface: "\u5BF9",
+      reading: "dui"
+    },
+    {
+      surface: "\u6211",
+      reading: "wo"
+    },
+    {
+      surface: "\u4F60",
+      reading: "ni"
+    },
+    {
+      surface: "\u54E6",
+      reading: "o"
+    },
+    {
+      surface: "\u5728",
+      reading: "zai"
+    },
+    {
+      surface: "\u4E0D",
+      reading: "bu"
+    },
+    {
+      surface: "\u662F",
+      reading: "shi"
+    },
+    {
+      surface: "\u54C8\u54C8",
+      reading: "haha"
+    },
+    {
+      surface: "\u4E00\u4F1A",
+      reading: "yihui"
+    }
+  ],
+  rows: [
+    {
+      keys: [
+        {
+          type: "number",
+          label: "12",
+          value: ""
+        },
+        {
+          type: "input",
+          label: "ABC",
+          value: "2"
+        },
+        {
+          type: "input",
+          label: "DEF",
+          value: "3"
+        }
+      ]
+    },
+    {
+      keys: [
+        {
+          type: "input",
+          label: "GHI",
+          value: "4"
+        },
+        {
+          type: "input",
+          label: "JKL",
+          value: "5"
+        },
+        {
+          type: "input",
+          label: "MNO",
+          value: "6"
+        }
+      ]
+    },
+    {
+      keys: [
+        {
+          type: "input",
+          label: "PQRS",
+          value: "7"
+        },
+        {
+          type: "input",
+          label: "TUV",
+          value: "8"
+        },
+        {
+          type: "input",
+          label: "WXYZ",
+          value: "9"
+        }
+      ]
+    }
+  ]
+};
+export {
+  zh_9_default as layout
+};

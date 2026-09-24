@@ -1,0 +1,216 @@
+<template>
+  <scroll class="container" bounces="end">
+    <div class="gap"></div>
+
+    <div class="lang-row" for="row in langsLayout">
+      <div
+        for="item in row"
+        class="lang-item"
+        :style="getIconStyle(item.type, item.boardType)"
+      >
+        <image
+          if="item.icon"
+          :src="item.icon"
+          @click="selectFeature(item)"
+        ></image>
+        <div class="lang-title" else @click="selectFeature(item)">
+          <p>
+            {{ item.title }}
+          </p>
+          <p if="item.subTitle" class="sub-title">
+            {{ item.subTitle }}
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="gap"></div>
+  </scroll>
+</template>
+
+<script lang="ts">
+import {
+  ChangeBoardType,
+  ChangeLang,
+  ChangeShowBoardList,
+  eventEmitter,
+} from '/utils/event';
+import SysRoute from '@system.router';
+import { container } from '/utils/container';
+import { Store } from '/store';
+import { ShowKeyBoardType } from '/utils/type';
+import { BoardItem } from '/types';
+
+interface Data {
+  langs: Array<
+    | BoardItem
+    | {
+        icon: string;
+        type: string;
+      }
+  >;
+  activeLang: string;
+  curBoardType: string;
+}
+const topSection = [
+  {
+    icon: '/assets/imgs/boardType/emoji.png',
+    type: 'emoji',
+  },
+  {
+    icon: '/assets/imgs/boardType/number.png',
+    type: 'number',
+  },
+];
+const endSection = [
+  {
+    icon: '/assets/imgs/boardType/setting.png',
+    type: 'setting',
+  },
+];
+
+export default {
+  data: {
+    langs: [],
+    activeLang: '',
+    curBoardType: '',
+  } as Data,
+  showBoardListEventId: null,
+  onInit() {
+    eventEmitter.on(ChangeBoardType, (type: ShowKeyBoardType) => {
+      console.debug('change board type111111111111', type);
+      switch (type) {
+        case ShowKeyBoardType.EmojiBoard:
+          this.curBoardType = 'emoji';
+          break;
+        default:
+          this.curBoardType = '';
+      }
+    });
+    eventEmitter.on(ChangeLang, ()=>{
+      this.loadLang()
+    })
+    this.loadLang();
+    this.showBoardListEventId = eventEmitter.on(ChangeShowBoardList, () => {
+      this.loadLang();
+    }) as any;
+  },
+  onShow() {
+    this.loadLang();
+  },
+  onDestroy() {
+    eventEmitter.off(ChangeShowBoardList, this.showBoardListEventId as any);
+  },
+  computed: {
+    langsLayout() {
+      const list: Array<Array<BoardItem & { type: string }>> = [];
+      for (let i = 0; i < this.langs.length; i += 3) {
+        const tmp = this.langs.slice(i, i + 3);
+        list.push(tmp as any);
+      }
+      return list;
+    },
+    getIconStyle() {
+      return (type: string, lang: string) => {
+        if (type === 'emoji' || type == 'number') {
+          if (this.curBoardType === type) {
+            return 'background-color: #FF6738;';
+          } else {
+            return 'background-color: #2d2e30;';
+          }
+        } else {
+          if (this.activeLang === lang && this.curBoardType === '') {
+            return 'background-color: #FF6738;';
+          } else {
+            return 'background-color: #2d2e30;';
+          }
+        }
+      };
+    },
+  },
+  loadLang() {
+    this.activeLang = container.get<Store>('store').activeBoard;
+    this.langs = [
+      ...topSection,
+      ...container.get<Store>('store').boardInfo.list,
+      ...endSection,
+    ] as Array<any>;
+    console.debug('show langs', this.langs);
+  },
+  selectFeature(item: { icon: string; type: string } | BoardItem) {
+    //@ts-ignore
+    switch (item.type) {
+      case 'emoji':
+        eventEmitter.emit(ChangeBoardType, ShowKeyBoardType.EmojiBoard);
+        this.$emit('backSwiper');
+        break;
+      case 'number':
+        eventEmitter.emit(ChangeBoardType, ShowKeyBoardType.NumberBoard);
+        this.$emit('backSwiper');
+        this.curBoardType = 'number';
+        break;
+      case 'setting':
+        // TODO 跳转到设置页面
+        SysRoute.push({
+          uri: 'settings',
+        });
+        break;
+      default:
+        container.get<Store>('store').activeBoard = (
+          item as BoardItem
+        ).boardType;
+        eventEmitter.emit(ChangeLang, false);
+        this.activeLang = container.get<Store>('store').activeBoard;
+        this.curBoardType = '';
+        this.$emit('backSwiper');
+    }
+  },
+};
+</script>
+
+<style lang="css">.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-family: thai, sans-serif;
+  padding: 0 10%;
+}
+
+.container .lang-row {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  margin-top: 10px;
+}
+
+.container .lang-row .lang-item {
+  width: 100px;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 110px;
+}
+
+.container .lang-row .lang-title {
+  width: 100px;
+  height: 100px;
+  border-radius: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+}
+
+.container .lang-row .sub-title {
+  font-size: 16px;
+}
+
+@media (shape: circle) {
+  .gap {
+    height: 15%;
+  }
+}
+</style>

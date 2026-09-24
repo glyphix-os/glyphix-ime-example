@@ -1,0 +1,145 @@
+<template>
+  <div class="number-symbol-board">
+    <scroll class="board-type">
+      <p
+        for="item in candidateType"
+        :style="curType === item.value ? 'color:#ffffff' : 'color: #ffffff4d'"
+        @click="selectBoardType(item.value)"
+      >
+        {{ item.label }}
+      </p>
+    </scroll>
+    <scroll class="candaidate-list">
+      <div class="candidate-row" for="row in candidateLayout">
+        <div class="candiate-item" for="(index, item) in row">
+          <p @click="onTapCandidate(item)">
+            {{ item }}
+          </p>
+          <div if="index !== row.length - 1" class="gap"></div>
+        </div>
+      </div>
+    </scroll>
+  </div>
+</template>
+
+<script lang="ts">
+import { eventEmitter, InsertImeText } from '/utils/event';
+interface Data {
+  candidateList: Array<string>;
+  curType: string;
+}
+export default {
+  data: {
+    candidateList: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
+    curType: 'number',
+  } as Data,
+  candidateType: [
+    {
+      label: $t('numberLabel'),
+      value: 'number',
+    },
+    {
+      label: $t('symbolLabel'),
+      value: 'symbol',
+    },
+    {
+      label: 'abc',
+      value: 'lowA',
+    },
+    {
+      label: 'ABC',
+      value: 'upperA',
+    },
+  ],
+
+  candiates: {
+    /* prettier-ignore */
+    number: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
+    /* prettier-ignore */
+    symbol: [
+      '，','。','？','！','：','；','、','-',
+      '“','”','‘','’',
+      '（','）','《','》','【','】','.com',
+      '…','——','·','~',
+      ',','.','/','_','+','=','*','&','^','%','$','#','@',
+      '<','>','(',')','[',']','{','}','|','\\',
+      '￥','€','£',
+      '×','÷','±','≠','≤','≥','°',
+    ],
+    /* prettier-ignore */
+    lowA: ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',],
+    /* prettier-ignore */
+    upperA: [ 'A', 'B', 'C', 'D', 'E', 'F','G', 'H', 'I', 'J', 'K', 'L','M', 'N', 'O', 'P', 'Q', 'R','S', 'T', 'U', 'V', 'W', 'X','Y', 'Z'],
+  },
+  computed: {
+    candidateLayout() {
+      const list: Array<Array<string>> = [];
+      for (let i = 0; i < this.candidateList.length; i += 4) {
+        const tmp = this.candidateList.slice(i, i + 4);
+        list.push(tmp);
+      }
+      return list;
+    },
+  },
+  onTapCandidate(val: string) {
+    eventEmitter.emit(InsertImeText, {
+      input: '',
+      select: val,
+    });
+  },
+  selectBoardType(val: string) {
+    this.curType = val;
+    //@ts-ignore
+    this.candidateList = this.candiates[val];
+  },
+};
+</script>
+
+<style lang="css">.number-symbol-board {
+  display: flex;
+  flex-direction: column;
+}
+
+.board-type {
+  display: flex;
+  flex-direction: row;
+  padding: 10px 5%;
+  flex-shrink: 0;
+  background-color: #17181a;
+}
+
+.board-type p {
+  padding: 0 20px;
+}
+
+.candaidate-list {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+}
+
+.candaidate-list .candidate-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+.candaidate-list .candiate-item {
+  width: 25%;
+  margin-bottom: 16px;
+  text-align: center;
+  display: flex;
+  height: 66px;
+}
+
+.candaidate-list .candiate-item p {
+  flex: 1;
+  background-color: #2d2e30;
+  border-radius: 4px;
+}
+
+.candaidate-list .candiate-item .gap {
+  width: 6px;
+  height: 100%;
+}
+</style>

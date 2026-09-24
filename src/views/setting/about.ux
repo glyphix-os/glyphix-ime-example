@@ -1,0 +1,36 @@
+<template>
+  <scroll>
+    <p t>appName</p>
+    <p>{{ version }} - {{ hash }}</p>
+    <p>引擎版本 {{ imeVersion }}</p>
+  </scroll>
+</template>
+
+<script lang="ts">
+import SysIme from '@system.ime';
+export default {
+  data: {
+    version: process.env.GLYPHIX_APP_VERSION,
+    hash: process.env.GLYPHIX_APP_HASH,
+    imeVersion: '',
+  },
+  onInit() {
+    const engineVersion = SysIme.version;
+    const major = (engineVersion >> 8) & 0xff;
+    const minor = engineVersion & 0xff;
+    this.imeVersion = `${major}.${minor}`;
+  },
+};
+</script>
+
+<style lang="css">scroll {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+scroll p {
+  margin-bottom: 30px;
+}
+</style>

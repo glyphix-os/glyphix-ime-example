@@ -1,0 +1,77 @@
+<template>
+  <scroll>
+    <p class="title">{{ $t('appPolicy') }}</p>
+    <p class="license">
+      {{ $t('license') }}
+    </p>
+    <button class="operation agree" @click="agreeLicense">
+      {{ $t('agreeLicense') }}
+    </button>
+    <button class="operation" @click="rejectLicense">
+      {{ $t('rejectLicense') }}
+    </button>
+  </scroll>
+</template>
+
+<script lang="ts">
+import SysRoute from '@system.router';
+import SysLaunch from '@system.launch';
+import SysStorage from '@system.storage';
+import { USER_LICENSE_STATUS_KEY } from '/utils/constants';
+import { container } from '/utils/container';
+import { Store } from '/store';
+import SysFile from '@system.file'
+
+export default {
+  agreeLicense() {
+    SysStorage.set(USER_LICENSE_STATUS_KEY, true);
+    SysFile.writeText({
+      uri: 'internal://files/license',
+      text: 'true',
+    }).then(()=>{
+      container.get<Store>('store').activeBoard = container.get<Store>('store')
+        .isOverseas
+        ? 'en-US'
+        : 'zh_9';
+
+      SysRoute.replace({ uri: 'board' });
+    })
+  },
+  rejectLicense() {
+    SysLaunch.exit();
+  },
+};
+</script>
+
+<style lang="css">scroll {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15% 15%;
+}
+
+scroll .title {
+  font-size: 30px;
+  font-style: normal;
+  font-weight: 500;
+}
+
+scroll .license {
+  margin-top: 8px;
+  color: #999da6;
+  text-align: center;
+}
+
+scroll button {
+  padding: 25px 80px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 60px;
+  background-color: #202124;
+  margin-bottom: 8px;
+}
+
+scroll button.agree {
+  margin-top: 25px;
+}
+</style>

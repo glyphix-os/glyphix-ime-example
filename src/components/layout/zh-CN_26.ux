@@ -1,0 +1,54 @@
+<template>
+      <div class="key-row">
+            <p class="key-item" @click="onTapKey('input', 'Q', 'Q')">{{ 'Q' }}</p>
+            <p class="key-item" @click="onTapKey('input', 'W', 'W')">{{ 'W' }}</p>
+            <p class="key-item" @click="onTapKey('input', 'E', 'E')">{{ 'E' }}</p>
+            <p class="key-item" @click="onTapKey('input', 'R', 'R')">{{ 'R' }}</p>
+            <p class="key-item" @click="onTapKey('input', 'T', 'T')">{{ 'T' }}</p>
+            <p class="key-item" @click="onTapKey('input', 'Y', 'Y')">{{ 'Y' }}</p>
+            <p class="key-item" @click="onTapKey('input', 'U', 'U')">{{ 'U' }}</p>
+            <p class="key-item" @click="onTapKey('input', 'I', 'I')">{{ 'I' }}</p>
+            <p class="key-item" @click="onTapKey('input', 'O', 'O')">{{ 'O' }}</p>
+            <p class="key-item" @click="onTapKey('input', 'P', 'P')">{{ 'P' }}</p>
+      </div>
+      <div class="key-row">
+        <div class="key-row-gap-05"></div>
+            <p class="key-item" @click="onTapKey('input', 'A', 'A')">{{ 'A' }}</p>
+            <p class="key-item" @click="onTapKey('input', 'S', 'S')">{{ 'S' }}</p>
+            <p class="key-item" @click="onTapKey('input', 'D', 'D')">{{ 'D' }}</p>
+            <p class="key-item" @click="onTapKey('input', 'F', 'F')">{{ 'F' }}</p>
+            <p class="key-item" @click="onTapKey('input', 'G', 'G')">{{ 'G' }}</p>
+            <p class="key-item" @click="onTapKey('input', 'H', 'H')">{{ 'H' }}</p>
+            <p class="key-item" @click="onTapKey('input', 'J', 'J')">{{ 'J' }}</p>
+            <p class="key-item" @click="onTapKey('input', 'K', 'K')">{{ 'K' }}</p>
+            <p class="key-item" @click="onTapKey('input', 'L', 'L')">{{ 'L' }}</p>
+        <div class="key-row-gap-05"></div>
+      </div>
+      <div class="key-row">
+        <div class="key-row-gap-10"></div>
+            <p class="key-item" @click="onTapKey('input', 'Z', 'Z')">{{ 'Z' }}</p>
+            <p class="key-item" @click="onTapKey('input', 'X', 'X')">{{ 'X' }}</p>
+            <p class="key-item" @click="onTapKey('input', 'C', 'C')">{{ 'C' }}</p>
+            <p class="key-item" @click="onTapKey('input', 'V', 'V')">{{ 'V' }}</p>
+            <p class="key-item" @click="onTapKey('input', 'B', 'B')">{{ 'B' }}</p>
+            <p class="key-item" @click="onTapKey('input', 'N', 'N')">{{ 'N' }}</p>
+            <p class="key-item" @click="onTapKey('input', 'M', 'M')">{{ 'M' }}</p>
+            <p class="key-item number-key" @click="onTapKey('number', '', '')">12</p>
+        <div class="key-row-gap-10"></div>
+      </div>
+</template>
+
+<script lang="ts">
+export default {
+  data:{
+    showShiftValue: false
+  },
+  onTapKey(type: string, value: string, shiftValue: string){
+    this.$emit('keyTap', {type, value, shiftValue})
+  }
+};
+</script>
+
+<style lang="css">@import '/components/layout/common.css';
+
+</style>

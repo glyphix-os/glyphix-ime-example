@@ -1,0 +1,55 @@
+<template>
+      <div class="key-row">
+            <p class="key-item" @click="onTapKey('input', 'q', 'Q')">{{ showShiftValue ? 'Q' : 'q' }}</p>
+            <p class="key-item" @click="onTapKey('input', 'w', 'W')">{{ showShiftValue ? 'W' : 'w' }}</p>
+            <p class="key-item" @click="onTapKey('input', 'e', 'E')">{{ showShiftValue ? 'E' : 'e' }}</p>
+            <p class="key-item" @click="onTapKey('input', 'r', 'R')">{{ showShiftValue ? 'R' : 'r' }}</p>
+            <p class="key-item" @click="onTapKey('input', 't', 'T')">{{ showShiftValue ? 'T' : 't' }}</p>
+            <p class="key-item" @click="onTapKey('input', 'y', 'Y')">{{ showShiftValue ? 'Y' : 'y' }}</p>
+            <p class="key-item" @click="onTapKey('input', 'u', 'U')">{{ showShiftValue ? 'U' : 'u' }}</p>
+            <p class="key-item" @click="onTapKey('input', 'i', 'I')">{{ showShiftValue ? 'I' : 'i' }}</p>
+            <p class="key-item" @click="onTapKey('input', 'o', 'O')">{{ showShiftValue ? 'O' : 'o' }}</p>
+            <p class="key-item" @click="onTapKey('input', 'p', 'P')">{{ showShiftValue ? 'P' : 'p' }}</p>
+      </div>
+      <div class="key-row">
+        <div class="key-row-gap-05"></div>
+            <p class="key-item" @click="onTapKey('input', 'a', 'A')">{{ showShiftValue ? 'A' : 'a' }}</p>
+            <p class="key-item" @click="onTapKey('input', 's', 'S')">{{ showShiftValue ? 'S' : 's' }}</p>
+            <p class="key-item" @click="onTapKey('input', 'd', 'D')">{{ showShiftValue ? 'D' : 'd' }}</p>
+            <p class="key-item" @click="onTapKey('input', 'f', 'F')">{{ showShiftValue ? 'F' : 'f' }}</p>
+            <p class="key-item" @click="onTapKey('input', 'g', 'G')">{{ showShiftValue ? 'G' : 'g' }}</p>
+            <p class="key-item" @click="onTapKey('input', 'h', 'H')">{{ showShiftValue ? 'H' : 'h' }}</p>
+            <p class="key-item" @click="onTapKey('input', 'j', 'J')">{{ showShiftValue ? 'J' : 'j' }}</p>
+            <p class="key-item" @click="onTapKey('input', 'k', 'K')">{{ showShiftValue ? 'K' : 'k' }}</p>
+            <p class="key-item" @click="onTapKey('input', 'l', 'L')">{{ showShiftValue ? 'L' : 'l' }}</p>
+        <div class="key-row-gap-05"></div>
+      </div>
+      <div class="key-row">
+        <div class="key-row-gap-10"></div>
+            <image class="key-item" @click="onTapKey('shift', '', '')" :src="showShiftValue ? '/assets/imgs/board/shiftFill.png' : '/assets/imgs/board/shift.png'"></image>
+            <p class="key-item" @click="onTapKey('input', 'z', 'Z')">{{ showShiftValue ? 'Z' : 'z' }}</p>
+            <p class="key-item" @click="onTapKey('input', 'x', 'X')">{{ showShiftValue ? 'X' : 'x' }}</p>
+            <p class="key-item" @click="onTapKey('input', 'c', 'C')">{{ showShiftValue ? 'C' : 'c' }}</p>
+            <p class="key-item" @click="onTapKey('input', 'v', 'V')">{{ showShiftValue ? 'V' : 'v' }}</p>
+            <p class="key-item" @click="onTapKey('input', 'b', 'B')">{{ showShiftValue ? 'B' : 'b' }}</p>
+            <p class="key-item" @click="onTapKey('input', 'n', 'N')">{{ showShiftValue ? 'N' : 'n' }}</p>
+            <p class="key-item" @click="onTapKey('input', 'm', 'M')">{{ showShiftValue ? 'M' : 'm' }}</p>
+            <p class="key-item number-key" @click="onTapKey('number', '', '')">12</p>
+        <div class="key-row-gap-10"></div>
+      </div>
+</template>
+
+<script lang="ts">
+export default {
+  data:{
+    showShiftValue: false
+  },
+  onTapKey(type: string, value: string, shiftValue: string){
+    this.$emit('keyTap', {type, value, shiftValue})
+  }
+};
+</script>
+
+<style lang="css">@import '/components/layout/common.css';
+
+</style>

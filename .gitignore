@@ -1,0 +1,11 @@
+.glyphix-work
+node_modules
+dist
+.DS_Store
+*.log
+logs
+dist
+apps/src/assets/mock
+test.d.ts
+server/library
+prof

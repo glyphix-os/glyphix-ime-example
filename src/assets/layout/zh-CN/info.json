@@ -1,0 +1,1 @@
+[{"name":"中文26键","lang":"zh-CN","boardType":"zh_26","icon":"/assets/imgs/boardType/zh_26.png","layoutFile":"/assets/layout/zh-CN/index26.jsc","boardMask":1},{"name":"中文9键","lang":"zh-CN","boardType":"zh_9","boardMask":2,"icon":"/assets/imgs/boardType/zh_9.png","layoutFile":"/assets/layout/zh-CN/index9.jsc"}]

@@ -1,0 +1,214 @@
+// server/layout/zh-CN/zh_26.json
+var zh_26_default = {
+  id: "zh",
+  name: "Zh_26",
+  boardMask: 1,
+  library: "zh",
+  version: 1,
+  defaultCandidate: [
+    {
+      surface: "\u55EF",
+      reading: "en"
+    },
+    {
+      surface: "\u597D",
+      reading: "hao"
+    },
+    {
+      surface: "\u5BF9",
+      reading: "dui"
+    },
+    {
+      surface: "\u6211",
+      reading: "wo"
+    },
+    {
+      surface: "\u4F60",
+      reading: "ni"
+    },
+    {
+      surface: "\u54E6",
+      reading: "o"
+    },
+    {
+      surface: "\u5728",
+      reading: "zai"
+    },
+    {
+      surface: "\u4E0D",
+      reading: "bu"
+    },
+    {
+      surface: "\u662F",
+      reading: "shi"
+    },
+    {
+      surface: "\u54C8\u54C8",
+      reading: "haha"
+    },
+    {
+      surface: "\u4E00\u4F1A",
+      reading: "yihui"
+    }
+  ],
+  rows: [
+    {
+      keys: [
+        {
+          type: "input",
+          label: "Q",
+          value: "Q"
+        },
+        {
+          type: "input",
+          label: "W",
+          value: "W"
+        },
+        {
+          type: "input",
+          label: "E",
+          value: "E"
+        },
+        {
+          type: "input",
+          label: "R",
+          value: "R"
+        },
+        {
+          type: "input",
+          label: "T",
+          value: "T"
+        },
+        {
+          type: "input",
+          label: "Y",
+          value: "Y"
+        },
+        {
+          type: "input",
+          label: "U",
+          value: "U"
+        },
+        {
+          type: "input",
+          label: "I",
+          value: "I"
+        },
+        {
+          type: "input",
+          label: "O",
+          value: "O"
+        },
+        {
+          type: "input",
+          label: "P",
+          value: "P"
+        }
+      ]
+    },
+    {
+      gap: {
+        left: 0.5,
+        right: 0.5
+      },
+      keys: [
+        {
+          type: "input",
+          label: "A",
+          value: "A"
+        },
+        {
+          type: "input",
+          label: "S",
+          value: "S"
+        },
+        {
+          type: "input",
+          label: "D",
+          value: "D"
+        },
+        {
+          type: "input",
+          label: "F",
+          value: "F"
+        },
+        {
+          type: "input",
+          label: "G",
+          value: "G"
+        },
+        {
+          type: "input",
+          label: "H",
+          value: "H"
+        },
+        {
+          type: "input",
+          label: "J",
+          value: "J"
+        },
+        {
+          type: "input",
+          label: "K",
+          value: "K"
+        },
+        {
+          type: "input",
+          label: "L",
+          value: "L"
+        }
+      ]
+    },
+    {
+      gap: {
+        left: 1,
+        right: 1
+      },
+      keys: [
+        {
+          type: "input",
+          label: "Z",
+          value: "Z"
+        },
+        {
+          type: "input",
+          label: "X",
+          value: "X"
+        },
+        {
+          type: "input",
+          label: "C",
+          value: "C"
+        },
+        {
+          type: "input",
+          label: "V",
+          value: "V"
+        },
+        {
+          type: "input",
+          label: "B",
+          value: "B"
+        },
+        {
+          type: "input",
+          label: "N",
+          value: "N"
+        },
+        {
+          type: "input",
+          label: "M",
+          value: "M"
+        },
+        {
+          type: "number",
+          label: "12",
+          value: ""
+        }
+      ]
+    }
+  ]
+};
+export {
+  zh_26_default as layout
+};

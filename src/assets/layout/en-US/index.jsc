@@ -1,0 +1,289 @@
+// server/layout/en-US/en.json
+var en_default = {
+  id: "en",
+  name: "English",
+  library: "en",
+  version: 1,
+  boardMask: 4,
+  defaultCandidate: [
+    {
+      surface: "@",
+      reading: ""
+    },
+    {
+      surface: "#",
+      reading: ""
+    },
+    {
+      surface: ":",
+      reading: ""
+    },
+    {
+      surface: "_",
+      reading: ""
+    },
+    {
+      surface: ".",
+      reading: ""
+    },
+    {
+      surface: "-",
+      reading: ""
+    },
+    {
+      surface: "%",
+      reading: ""
+    },
+    {
+      surface: "&",
+      reading: ""
+    },
+    {
+      surface: "*",
+      reading: ""
+    },
+    {
+      surface: "!",
+      reading: ""
+    },
+    {
+      surface: "$",
+      reading: ""
+    },
+    {
+      surface: "+",
+      reading: ""
+    },
+    {
+      surface: "'",
+      reading: ""
+    },
+    {
+      surface: "*",
+      reading: ""
+    },
+    {
+      surface: ",",
+      reading: ""
+    }
+  ],
+  rows: [
+    {
+      keys: [
+        {
+          type: "input",
+          value: "q",
+          label: "q",
+          shiftValue: "Q",
+          shiftLabel: "Q"
+        },
+        {
+          type: "input",
+          value: "w",
+          label: "w",
+          shiftValue: "W",
+          shiftLabel: "W"
+        },
+        {
+          type: "input",
+          value: "e",
+          label: "e",
+          shiftValue: "E",
+          shiftLabel: "E"
+        },
+        {
+          type: "input",
+          value: "r",
+          label: "r",
+          shiftValue: "R",
+          shiftLabel: "R"
+        },
+        {
+          type: "input",
+          value: "t",
+          label: "t",
+          shiftValue: "T",
+          shiftLabel: "T"
+        },
+        {
+          type: "input",
+          value: "y",
+          label: "y",
+          shiftValue: "Y",
+          shiftLabel: "Y"
+        },
+        {
+          type: "input",
+          value: "u",
+          label: "u",
+          shiftValue: "U",
+          shiftLabel: "U"
+        },
+        {
+          type: "input",
+          value: "i",
+          label: "i",
+          shiftValue: "I",
+          shiftLabel: "I"
+        },
+        {
+          type: "input",
+          value: "o",
+          label: "o",
+          shiftValue: "O",
+          shiftLabel: "O"
+        },
+        {
+          type: "input",
+          value: "p",
+          label: "p",
+          shiftValue: "P",
+          shiftLabel: "P"
+        }
+      ]
+    },
+    {
+      gap: {
+        left: 0.5,
+        right: 0.5
+      },
+      keys: [
+        {
+          type: "input",
+          value: "a",
+          label: "a",
+          shiftValue: "A",
+          shiftLabel: "A"
+        },
+        {
+          type: "input",
+          value: "s",
+          label: "s",
+          shiftValue: "S",
+          shiftLabel: "S"
+        },
+        {
+          type: "input",
+          value: "d",
+          label: "d",
+          shiftValue: "D",
+          shiftLabel: "D"
+        },
+        {
+          type: "input",
+          value: "f",
+          label: "f",
+          shiftValue: "F",
+          shiftLabel: "F"
+        },
+        {
+          type: "input",
+          value: "g",
+          label: "g",
+          shiftValue: "G",
+          shiftLabel: "G"
+        },
+        {
+          type: "input",
+          value: "h",
+          label: "h",
+          shiftValue: "H",
+          shiftLabel: "H"
+        },
+        {
+          type: "input",
+          value: "j",
+          label: "j",
+          shiftValue: "J",
+          shiftLabel: "J"
+        },
+        {
+          type: "input",
+          value: "k",
+          label: "k",
+          shiftValue: "K",
+          shiftLabel: "K"
+        },
+        {
+          type: "input",
+          value: "l",
+          label: "l",
+          shiftValue: "L",
+          shiftLabel: "L"
+        }
+      ]
+    },
+    {
+      gap: {
+        left: 1,
+        right: 1
+      },
+      keys: [
+        {
+          type: "shift",
+          valueType: "image",
+          label: "/assets/imgs/board/shift.png",
+          shiftLabel: "/assets/imgs/board/shiftFill.png"
+        },
+        {
+          type: "input",
+          value: "z",
+          label: "z",
+          shiftValue: "Z",
+          shiftLabel: "Z"
+        },
+        {
+          type: "input",
+          value: "x",
+          label: "x",
+          shiftValue: "X",
+          shiftLabel: "X"
+        },
+        {
+          type: "input",
+          value: "c",
+          label: "c",
+          shiftValue: "C",
+          shiftLabel: "C"
+        },
+        {
+          type: "input",
+          value: "v",
+          label: "v",
+          shiftValue: "V",
+          shiftLabel: "V"
+        },
+        {
+          type: "input",
+          value: "b",
+          label: "b",
+          shiftValue: "B",
+          shiftLabel: "B"
+        },
+        {
+          type: "input",
+          value: "n",
+          label: "n",
+          shiftValue: "N",
+          shiftLabel: "N"
+        },
+        {
+          type: "input",
+          value: "m",
+          label: "m",
+          shiftValue: "M",
+          shiftLabel: "M"
+        },
+        {
+          type: "number",
+          label: "12",
+          shiftLabel: "12",
+          value: ""
+        }
+      ]
+    }
+  ]
+};
+export {
+  en_default as layout
+};
