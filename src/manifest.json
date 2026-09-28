@@ -3,7 +3,6 @@
   "name": "${appName}",
   "versionName": "0.3.0",
   "versionCode": 30,
-  "icon": "",
   "features": [],
   "permissions": [
     {
